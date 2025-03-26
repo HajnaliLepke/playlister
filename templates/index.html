@@ -13,15 +13,21 @@
         {% if error %}
         <p style="color: red">{{ error }}</p>
         {% endif %}
-        <div class="input-section">
+        <form action="/download" method="post" class="input-section">
+          <label for="playlist_url">Playlist URL:</label><br />
           <input
             type="text"
-            id="playlist-url"
-            placeholder="Enter YouTube playlist URL"
+            id="playlist_url"
+            name="playlist_url"
+            style="width: 400px"
+            required
             class="playlist-input"
           />
-          <button id="download-btn" class="download-button">Download</button>
-        </div>
+          <br /><br />
+          <button id="download-btn" class="download-button" type="submit">
+            Download
+          </button>
+        </form>
 
         <div class="history-section">
           <h2>Download History</h2>
@@ -35,6 +41,5 @@
         </div>
       </div>
     </div>
-    <script type="module" src="/main.js"></script>
   </body>
 </html>

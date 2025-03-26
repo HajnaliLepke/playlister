@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Download Progress</title>
+    <script>
+      async function checkProgress() {
+        const taskId = "{{ task_id }}";
+        const res = await fetch(`/progress/${taskId}`);
+        const data = await res.json();
+        const progressEl = document.getElementById("progress");
+        const statusEl = document.getElementById("status");
+        const downloadEl = document.getElementById("download");
+        const downloadA = document.getElementById("download_zip_link");
+        //const backA = document.getElementById("back");
+
+        if (data.error) {
+          statusEl.innerText = "❌ " + data.error;
+        } else if (data.done) {
+          statusEl.innerText = "✅ Download complete!";
+          progressEl.innerText = `All ${data.total} tracks downloaded.`;
+          //downloadA.innerHtml = "Download the playlist";
+          //downloadA.href = "{{download_zip_file}}";
+          backA.disabled = false;
+        } else {
+          const downloaded = data.downloaded || 0;
+          const total = data.total || "?";
+          progressEl.innerText = `Downloading: ${downloaded} / ${total}`;
+          setTimeout(checkProgress, 2000);
+        }
+      }
+
+      window.onload = checkProgress;
+    </script>
+  </head>
+  <body>
+    <h1>Downloading Playlist...</h1>
+    <p id="progress">Initializing...</p>
+    <p id="status"></p>
+    {% comment %}
+    <p id="download"><a id="download_zip_link"></a></p>
+    {% endcomment %}
+    <br />
+    <a id="back" href="/" disabled>Download another playlist</a>
+  </body>
+</html>

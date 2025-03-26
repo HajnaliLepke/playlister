@@ -35,6 +35,7 @@ h2 {
     display: flex;
     gap: 1rem;
     margin-bottom: 3rem;
+    align-items: center;
 }
 
 .playlist-input {
