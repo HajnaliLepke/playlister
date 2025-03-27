@@ -19,7 +19,7 @@
           statusEl.innerText = "✅ Download complete!";
           progressEl.innerText = `All ${data.total} tracks downloaded.`;
           downloadA.innerText = "Download the playlist";
-          downloadA.href = "{{download_zip_file}}";
+          downloadA.href = "/download-zip/{{download_zip_file}}";
           backA.style.display = "block";
         } else {
           const downloaded = data.downloaded || 0;

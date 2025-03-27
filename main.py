@@ -15,6 +15,7 @@ from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from fastapi import BackgroundTasks
+from fastapi.responses import FileResponse
 
 from utils import sanitize_filename, empty_folder, check_or_create_folder
 
@@ -82,7 +83,8 @@ async def index(request: Request):
 async def download_playlist(request: Request, playlist_url: str = Form(...), background_tasks: BackgroundTasks = None):
     task_id = str(uuid.uuid4())
     playlist_info = get_playlist_metadata(playlist_url)
-    playlist_title = playlist_info.get("title", "unnamed_playlist")
+    playlist_title = sanitize_filename(
+        logger, playlist_info.get("title", "unnamed_playlist"))
 
     background_tasks.add_task(
         run_download, logger, playlist_url, task_id, playlist_info)
@@ -90,7 +92,7 @@ async def download_playlist(request: Request, playlist_url: str = Form(...), bac
     return templates.TemplateResponse("progress.html", {
         "request": request,
         "task_id": task_id,
-        "download_zip_file": f"{DOWNLOAD_DIR}/{playlist_title}.zip"
+        "download_zip_file": f"{playlist_title}.zip"
     })
 
 
@@ -99,6 +101,13 @@ async def get_progress(task_id: str, download_zip_file: str | None = None):
     with progress_lock:
         data = progress_data.get(task_id, {})
     return data
+
+
+@app.get("/download-zip/{file_path}")
+async def download_zip(file_path: str):
+    # , filename='downloaded_file.zip')
+    file_path_extended = f"{DOWNLOAD_DIR}/{file_path}"
+    return FileResponse(file_path_extended, media_type='application/zip', filename=file_path)
 
 
 def run_download(logger: logging.Logger, playlist_url: str, task_id: str, playlist_info):
