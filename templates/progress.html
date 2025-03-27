@@ -11,16 +11,16 @@
         const statusEl = document.getElementById("status");
         const downloadEl = document.getElementById("download");
         const downloadA = document.getElementById("download_zip_link");
-        //const backA = document.getElementById("back");
+        const backA = document.getElementById("back");
 
         if (data.error) {
           statusEl.innerText = "❌ " + data.error;
         } else if (data.done) {
           statusEl.innerText = "✅ Download complete!";
           progressEl.innerText = `All ${data.total} tracks downloaded.`;
-          //downloadA.innerHtml = "Download the playlist";
-          //downloadA.href = "{{download_zip_file}}";
-          backA.disabled = false;
+          downloadA.innerText = "Download the playlist";
+          downloadA.href = "{{download_zip_file}}";
+          backA.style.display = "block";
         } else {
           const downloaded = data.downloaded || 0;
           const total = data.total || "?";
@@ -36,10 +36,8 @@
     <h1>Downloading Playlist...</h1>
     <p id="progress">Initializing...</p>
     <p id="status"></p>
-    {% comment %}
     <p id="download"><a id="download_zip_link"></a></p>
-    {% endcomment %}
     <br />
-    <a id="back" href="/" disabled>Download another playlist</a>
+    <a id="back" href="/" style="display: none">Download another playlist</a>
   </body>
 </html>

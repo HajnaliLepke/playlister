@@ -6,3 +6,4 @@ YT Playlist Downloader :$
 
 python -m venv .venv
 call .venv\Scripts\activate
+uvicorn main:app --reload
